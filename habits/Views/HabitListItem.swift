@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import HabitsShared
 
 struct HabitListItem: View {
     @Environment(\.modelContext) private var modelContext
@@ -22,19 +23,20 @@ struct HabitListItem: View {
                 Text("Added " + habit.dateAdded.formatted(date: .abbreviated, time: .omitted))
                     .italic()
                     .foregroundStyle(.secondary)
-                Toggle("Enable notifications", isOn: $habit.notificationsEnabled)
-                Button(action: {}) {
+                Toggle("Enable notifications", isOn: $habit.notificationsEnabled.animation())
+                NavigationLink{
+                   HabitDetail(habit:habit)
+                } label: {
                     Text("Edit")
-                    .frame(maxWidth:.infinity)
                 }
-                    .buttonStyle(.bordered)
+                .foregroundStyle(.blue)
             }
         } label: {
             HStack {
                 VStack(alignment: .leading) {
                     Text(habit.name)
                         .fontWeight(.semibold)
-                    Text(habit.frequencyString())
+                    Text("Daily")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -42,6 +44,7 @@ struct HabitListItem: View {
                 if !habit.notificationsEnabled {
                     Image(systemName: "bell.slash.fill")
                         .foregroundStyle(.secondary)
+                        .transition(.symbolEffect)
                 }
             }
         }
@@ -58,22 +61,26 @@ struct HabitListItem: View {
 }
 
 #Preview("Collapsed") {
-    ZStack{
-        Color(.secondarySystemBackground)
-        VStack {
-            List {
-                HabitListItem(habit: SampleData.shared.habit, showDetails: false)
+    NavigationStack{
+        ZStack{
+            Color(.secondarySystemBackground)
+            VStack {
+                List {
+                    HabitListItem(habit: SampleData.shared.habit, showDetails: false)
+                }
             }
         }
     }
 }
 
 #Preview("Expanded") {
-    ZStack{
-        Color(.secondarySystemBackground)
-        VStack {
-            List {
-                HabitListItem(habit: SampleData.shared.habit, showDetails: true)
+    NavigationStack{
+        ZStack{
+            Color(.secondarySystemBackground)
+            VStack {
+                List {
+                    HabitListItem(habit: SampleData.shared.habit, showDetails: true)
+                }
             }
         }
     }

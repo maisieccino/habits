@@ -6,6 +6,7 @@
 //
 
 import SwiftData
+import HabitsShared
 
 @MainActor
 class SampleData {
